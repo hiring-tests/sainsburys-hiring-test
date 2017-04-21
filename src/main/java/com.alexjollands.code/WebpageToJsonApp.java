@@ -1,8 +1,11 @@
 package com.alexjollands.code;
 
 import com.alexjollands.code.model.Product;
+import com.alexjollands.code.model.Report;
 import com.alexjollands.code.model.Webpage;
 import com.alexjollands.code.facades.WebpageDataFacade;
+import com.google.gson.Gson;
+
 
 import java.util.List;
 
@@ -22,11 +25,18 @@ public class WebpageToJsonApp{
         Webpage page = webpageDataFacade.getWebpage(PRODUCT_PAGE_URL);
         List<Product> products = webpageDataFacade.getProductsOnPage(page);
 
-        for (Product p : products){
-            System.out.println("Product title: " + p.getTitle());
-            System.out.println("Product unitPrice: " + p.getUnitPrice());
-            System.out.println("Product size: " + p.getSize());
-            System.out.println("Product description: " + p.getDescription());
+        Gson gson = new Gson();
+        Report report = new Report();
+        report.setResults(products);
+        report.setTotal(calculateTotalPrice(products));
+        System.out.println(gson.toJson(report));
+    }
+
+    private static String calculateTotalPrice(List<Product> products){
+        Double total = 0.0;
+        for(Product p : products){
+            total += Double.valueOf(p.getUnitPrice());
         }
+        return String.format( "%.2f", total );
     }
 }
