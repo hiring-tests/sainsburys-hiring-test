@@ -22,7 +22,6 @@ public class PageScraperService {
         }
         catch (IOException e){
             // Handle exception scenarios
-            System.out.println("IOException occured whilst retrieving webpage: " + url);
         }
         return htmlContent;
     }
