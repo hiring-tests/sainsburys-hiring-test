@@ -7,7 +7,6 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -22,34 +21,30 @@ public class PageScraperService {
             htmlContent = page.outerHtml();
         }
         catch (IOException e){
-            System.out.println("IOException occured whilst retrieving webpage: " + url);
             // Handle exception scenarios
+            System.out.println("IOException occured whilst retrieving webpage: " + url);
         }
         return htmlContent;
     }
 
     public List<Product> extractAllProductsFromWebpage(String content){
         ArrayList<Product> products = new ArrayList<Product>();
-
         Document page = Jsoup.parse(content);
         Elements productElements = page.getElementsByClass("product");
-
         for (Element p : productElements){
             products.add(createProductFromPageElement(p));
         }
-
         return products;
     }
-
 
     private Product createProductFromPageElement(Element productElement){
         Product product = new Product();
         product.setTitle(getTitleForProductElement(productElement));
         product.setUnitPrice(getUnitPriceForProductElement(productElement));
         product.setSize(getSizeOfLinkedDetailsPageForProductElement(productElement));
+        product.setDescription(getDescriptionForProductElement(productElement));
         return product;
     }
-
 
     private String getTitleForProductElement(Element productElement){
         Element productInfo = productElement.getElementsByClass("productInfo").first();
@@ -63,14 +58,27 @@ public class PageScraperService {
     }
 
     private String getSizeOfLinkedDetailsPageForProductElement(Element productElement){
-        Element productInfo = productElement.getElementsByClass("productInfo").first();
-        String productDetailsUrl = productInfo.select("a").first().attr("abs:href");
-        String pdpContent = getHTMLContentOfWebpage(productDetailsUrl);
+        String pdpContent = getPDPContentForProductElement(productElement);
         if (pdpContent != null){
             Double size = Math.floor((pdpContent.length() / 1024.0) * 100) / 100;
             return String.valueOf(size) + "kb";
         }
         return "";
+    }
+
+    private String getDescriptionForProductElement(Element productElement){
+        String pdpContent = getPDPContentForProductElement(productElement);
+        if (pdpContent != null){
+            Document page = Jsoup.parse(pdpContent);
+            return page.select(".productText").first().text();
+        }
+        return "";
+    }
+
+    private String getPDPContentForProductElement(Element productElement){
+        Element productInfo = productElement.getElementsByClass("productInfo").first();
+        String productDetailsUrl = productInfo.select("a").first().attr("abs:href");
+        return getHTMLContentOfWebpage(productDetailsUrl);
     }
 
     private String getPriceValueFromFormattedPrice(String formattedPrice){

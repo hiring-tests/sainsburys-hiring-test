@@ -4,7 +4,6 @@ import com.alexjollands.code.model.Product;
 import com.alexjollands.code.model.Webpage;
 import com.alexjollands.code.facades.WebpageDataFacade;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class WebpageToJsonApp{
@@ -27,6 +26,7 @@ public class WebpageToJsonApp{
             System.out.println("Product title: " + p.getTitle());
             System.out.println("Product unitPrice: " + p.getUnitPrice());
             System.out.println("Product size: " + p.getSize());
+            System.out.println("Product description: " + p.getDescription());
         }
     }
 }
