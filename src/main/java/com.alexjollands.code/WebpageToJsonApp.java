@@ -1,4 +1,4 @@
-package com.alexjollands.code;
+package java.com.alexjollands.code;
 
 public class WebpageToJsonApp{
 
