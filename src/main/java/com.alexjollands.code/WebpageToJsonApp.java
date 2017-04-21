@@ -25,6 +25,7 @@ public class WebpageToJsonApp{
 
         for (Product p : products){
             System.out.println("Product title: " + p.getTitle());
+            System.out.println("Product unitPrice: " + p.getUnitPrice());
         }
     }
 }

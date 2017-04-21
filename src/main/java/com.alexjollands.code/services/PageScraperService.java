@@ -9,6 +9,8 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PageScraperService {
 
@@ -41,6 +43,7 @@ public class PageScraperService {
     private Product createProductFromPageElement(Element productElement){
         Product product = new Product();
         product.setTitle(getTitleForProductElement(productElement));
+        product.setUnitPrice(getUnitPriceForProductElement(productElement));
         return product;
     }
 
@@ -50,5 +53,19 @@ public class PageScraperService {
         return productInfo.select("a").first().text();
     }
 
+    private String getUnitPriceForProductElement(Element productElement){
+        Element pricePerUnit = productElement.select(".pricePerUnit").first();
+        String formattedPrice = pricePerUnit.text();
+        return getPriceValueFromFormattedPrice(formattedPrice);
+    }
+
+    private String getPriceValueFromFormattedPrice(String formattedPrice){
+        Pattern p = Pattern.compile("(\\d+[.]\\d\\d)");
+        Matcher m = p.matcher(formattedPrice);
+        if (m.find()){
+            return m.group(0);
+        }
+        return "No price found";
+    }
 
 }

@@ -7,7 +7,6 @@ public class Product {
     private String unitPrice;
     private String size;
     private String description;
-    private String price;
 
     public String getTitle() {
         return title;
@@ -41,11 +40,4 @@ public class Product {
         this.description = description;
     }
 
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
 }
