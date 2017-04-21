@@ -1,7 +1,11 @@
 package com.alexjollands.code;
 
+import com.alexjollands.code.model.Product;
 import com.alexjollands.code.model.Webpage;
 import com.alexjollands.code.facades.WebpageDataFacade;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WebpageToJsonApp{
 
@@ -10,10 +14,17 @@ public class WebpageToJsonApp{
     private static WebpageDataFacade webpageDataFacade;
 
     public static void main(String[] args){
+        runApplication();
+    }
+
+    private static void runApplication(){
         webpageDataFacade = new WebpageDataFacade();
-        
+
         Webpage page = webpageDataFacade.getWebpage(PRODUCT_PAGE_URL);
-        String html = page.getContent();
-        System.out.println("Page content: " + html);
+        List<Product> products = webpageDataFacade.getProductsOnPage(page);
+
+        for (Product p : products){
+            System.out.println("Product title: " + p.getTitle());
+        }
     }
 }
