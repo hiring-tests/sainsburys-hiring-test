@@ -36,7 +36,7 @@ public class PageScraperService {
         return products;
     }
 
-    private Product createProductFromPageElement(Element productElement){
+    public Product createProductFromPageElement(Element productElement){
         Product product = new Product();
         product.setTitle(getTitleForProductElement(productElement));
         product.setUnitPrice(getUnitPriceForProductElement(productElement));
@@ -45,18 +45,18 @@ public class PageScraperService {
         return product;
     }
 
-    private String getTitleForProductElement(Element productElement){
+    public String getTitleForProductElement(Element productElement){
         Element productInfo = productElement.getElementsByClass("productInfo").first();
         return productInfo.select("a").first().text();
     }
 
-    private String getUnitPriceForProductElement(Element productElement){
+    public String getUnitPriceForProductElement(Element productElement){
         Element pricePerUnit = productElement.select(".pricePerUnit").first();
         String formattedPrice = pricePerUnit.text();
         return getPriceValueFromFormattedPrice(formattedPrice);
     }
 
-    private String getSizeOfLinkedDetailsPageForProductElement(Element productElement){
+    public String getSizeOfLinkedDetailsPageForProductElement(Element productElement){
         String pdpContent = getPDPContentForProductElement(productElement);
         if (pdpContent != null){
             Double size = Math.floor((pdpContent.length() / 1024.0) * 100) / 100;
@@ -65,7 +65,7 @@ public class PageScraperService {
         return "";
     }
 
-    private String getDescriptionForProductElement(Element productElement){
+    public String getDescriptionForProductElement(Element productElement){
         String pdpContent = getPDPContentForProductElement(productElement);
         if (pdpContent != null){
             Document page = Jsoup.parse(pdpContent);
@@ -74,13 +74,13 @@ public class PageScraperService {
         return "";
     }
 
-    private String getPDPContentForProductElement(Element productElement){
+    public String getPDPContentForProductElement(Element productElement){
         Element productInfo = productElement.getElementsByClass("productInfo").first();
         String productDetailsUrl = productInfo.select("a").first().attr("abs:href");
         return getHTMLContentOfWebpage(productDetailsUrl);
     }
 
-    private String getPriceValueFromFormattedPrice(String formattedPrice){
+    public String getPriceValueFromFormattedPrice(String formattedPrice){
         Pattern p = Pattern.compile("(\\d+[.]\\d\\d)");
         Matcher m = p.matcher(formattedPrice);
         if (m.find()){
