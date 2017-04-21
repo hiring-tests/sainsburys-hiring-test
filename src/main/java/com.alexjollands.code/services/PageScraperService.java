@@ -7,6 +7,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -21,6 +22,7 @@ public class PageScraperService {
             htmlContent = page.outerHtml();
         }
         catch (IOException e){
+            System.out.println("IOException occured whilst retrieving webpage: " + url);
             // Handle exception scenarios
         }
         return htmlContent;
@@ -44,6 +46,7 @@ public class PageScraperService {
         Product product = new Product();
         product.setTitle(getTitleForProductElement(productElement));
         product.setUnitPrice(getUnitPriceForProductElement(productElement));
+        product.setSize(getSizeOfLinkedDetailsPageForProductElement(productElement));
         return product;
     }
 
@@ -57,6 +60,17 @@ public class PageScraperService {
         Element pricePerUnit = productElement.select(".pricePerUnit").first();
         String formattedPrice = pricePerUnit.text();
         return getPriceValueFromFormattedPrice(formattedPrice);
+    }
+
+    private String getSizeOfLinkedDetailsPageForProductElement(Element productElement){
+        Element productInfo = productElement.getElementsByClass("productInfo").first();
+        String productDetailsUrl = productInfo.select("a").first().attr("abs:href");
+        String pdpContent = getHTMLContentOfWebpage(productDetailsUrl);
+        if (pdpContent != null){
+            Double size = Math.floor((pdpContent.length() / 1024.0) * 100) / 100;
+            return String.valueOf(size) + "kb";
+        }
+        return "";
     }
 
     private String getPriceValueFromFormattedPrice(String formattedPrice){
