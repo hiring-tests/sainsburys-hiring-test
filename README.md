@@ -35,7 +35,9 @@ Known issues:
 * Greater error handling is needed, for example null checks, empty array checks (prior to calling first() method) etc.
 * Code structure could be improved for maintainability, for example extracting css selectors out to a single config file or static strings at the top of the class.
 * Testing coverage is low. Unit tests included here to demonstrate competency, recognising limits in coverage and general application development due to time constraints (trying to keep to the recommended 2 hours).
-
+* Methods have been kept small and with descriptive names to avoid need for explanatory comments, however Javadoc needed.
+* Service methods could take Strings to avoid coupling with JSoup Element class.
+* Dummy application runs from inside the static main method - should be external class.
 
 ### Further work
 For an example of a completed code project, please see my Visualising an Ant Colony Optimisation Algorithm app, written in Javascript -
